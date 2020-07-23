@@ -26,9 +26,7 @@ acesse a pasta backend e execute o comando:
 
 ```bash
     cd backend
-    cp .env.example .env
-    yarn ou npm install
-    yarn start ou npm run start
+    yarn ou npm install   
 ```
 
 ## Criar arquivo de variáveis
@@ -38,6 +36,24 @@ Após o comando preenher as variáveis
 ```bash
     cd backend
     cp .env.example .env
+```
+
+## Executando migrations e seed 
+Foi utilizado sequelize ORM e postgres para teste e desenvolvimento da aplicação, para banco de dados se não tiver um banco de dados postgres, pode ser usado sqlite para testar por usar sequelize aceita outros bancos, para executar usando o sqlite alterar o DB_DIALECT=sqlite no arquivo .env
+
+SE USAR POSTGRES DEVE SER CRIADO UM BANCO DE DADOS E PREENCHER NO .env
+
+Obs: pode se usar yarn ou npm nos comandos abaixo.
+
+```bash 
+    yarn sequelize db:migrate
+    yarn sequelize db:seed:all
+```
+
+Se quiser executar o postgres em um container docker pode usar o seguinte comando (LEMBRANDO QUE SE TEM QUE TER O DOCKER INSTALADO)
+
+```bash
+    docker run --name postgres -e POSTGRES_PASSWORD=password -p 5432:5432 -d postgres
 ```
 
 ## Executando o projeto
