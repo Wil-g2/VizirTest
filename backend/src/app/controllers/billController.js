@@ -37,16 +37,15 @@ class billController {
 
       let withPlan = 0;
       let withinPlan = 0;
-
       if (time > plans.minutes) {
         withPlan = (time - plans.minutes) * (callPrice.price * 1.1);
       }
       withinPlan = time * callPrice.price;
 
-      return response.json({
+      return response.status(200).json({
         plan,
-        withPlan,
-        withinPlan,
+        withPlan: withPlan,
+        withinPlan: withinPlan,
       });
     } catch (err) {
       logger.error(`BillController (store) - error=${err}`);
