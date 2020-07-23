@@ -1,6 +1,8 @@
 const request = require('supertest');
 const app = require('../../src/app');
 import truncate from '../utils/truncate';
+import CallPrices from '../../src/app/models/CallPrices';
+import callPrices from '../../src/app/models/CallPrices';
 
 describe('CallPrices', () => {
   beforeEach(async () => {

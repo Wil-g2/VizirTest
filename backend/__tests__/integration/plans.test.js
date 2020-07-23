@@ -12,12 +12,31 @@ describe('Plans', () => {
     const response = await request(app)
       .post(`/plans`)
       .send({
-        title: 'FaleMais 30',
+        title: 'FaleMais 200',
         minutes: 30,
         increase: 10.0,
       });
 
     expect(response.status).toBe(200);
+  });
+
+  it('should not be able to register a new Plan duplicate title', async () => {
+    await request(app)
+      .post(`/plans`)
+      .send({
+        title: 'FaleMais 210',
+        minutes: 30,
+        increase: 10.0,
+      });
+
+    const response = await request(app)
+      .post(`/plans`)
+      .send({
+        title: 'FaleMais 210',
+        minutes: 30,
+        increase: 10.0,
+      });
+    expect(response.status).toBe(404);
   });
 
   it('should return a json with Plans', async () => {
