@@ -1,31 +1,47 @@
 import React, { useState, useEffect } from "react";
-import {
-  ScrollView,
-  Text,
-  SafeAreaView,
-  Picker,
-  TextInput,
-  Button,
-} from "react-native";
+import { Alert } from "react-native";
 import { Plans, Bill } from "../../services/dataService";
-import api from "axios";
+import { useForm } from "react-hook-form";
+import {
+  Button,
+  ButtonText,
+  Container,
+  CustomTextInput,
+  Select,
+  Title,
+  ResultText,
+} from "./styles";
+
 export default () => {
+  const [withPlan, setWithPlan] = useState("-");
+  const [withinPlan, setWithinPlan] = useState("-");
   const [plan, setPlan] = useState(0);
   const [loading, setLoading] = useState(false);
   const [plans, setPlans] = useState([]);
-  // useState([
-  //   { name: "FaleMais 30", minutes: 30 },
-  //   { name: "FaleMais 60", minutes: 60 },
-  //   { name: "FaleMais 120", minutes: 120 },
-  // ]);
+  const { register, setValue, handleSubmit, errors } = useForm();
+
+  const onSubmit = async (data) => {
+    try {
+      const response = await Bill.calculate(data);
+      console.log(response);
+      if (response.status === 200) {
+        setWithPlan(response.data.withPlan);
+        setWithinPlan(response.data.withinPlan);
+      }
+    } catch (err) {
+      console.log(err);
+      setWithPlan("-");
+      setWithinPlan("-");
+      Alert.alert("Erro ao tentar calcular!");
+    }
+  };
 
   const loadData = async () => {
     try {
-      // // const response = await Plans.getAll();
-      // const response = await api.get("http://localhost:3333/plans");
-      // console.log(response.data);
-      // setPlan(response.data);
-      // setLoading(false);
+      const response = await Plans.getAll();
+      setPlans(response.data.plans);
+      console.log(response.data.plans);
+      setLoading(false);
     } catch (err) {
       console.log(err);
     }
@@ -33,34 +49,52 @@ export default () => {
 
   useEffect(() => {
     loadData();
-  });
+  }, []);
+
+  useEffect(() => {
+    register({ name: "source" });
+    register({ name: "destination" });
+    register({ name: "time" });
+    register({ name: "plan" });
+  }, [register]);
 
   const handlePlans = (itemValue) => {
-    console.log(itemValue);
     setPlan(itemValue);
+    setValue("plan", itemValue);
   };
+
   return (
-    <ScrollView>
-      <Text>Simular valores</Text>
+    <Container>
+      <Title>Simular valores</Title>
       {!loading && (
         <>
-          <Picker
+          <Select
             selectedValue={plan}
             onValueChange={(itemValue, itemIndex) => handlePlans(itemValue)}
           >
-            {/* {plans.map((index, value) => {
-          <Picker.Item key={index} value={value.minutes} label={value.name} />;
-        })} */}
-            <Picker.Item key={0} value={30} label="FaleMais 30" />
-            <Picker.Item key={1} value={60} label="FaleMais 60" />
-            <Picker.Item key={2} value={120} label="FaleMais 120" />
-          </Picker>
-          <TextInput placeholder="Origem" />
-          <TextInput placeholder="Destino" />
-          <TextInput placeholder="Tempo" />
-          <Button title="Simular" onPress={() => alert("click me")} />
+            {plans.map((item, key) => (
+              <Picker.Item label={item.title} value={item.title} key={key} />
+            ))}
+          </Select>
+          <CustomTextInput
+            placeholder="Origem"
+            onChangeText={(text) => setValue("source", text)}
+          />
+          <CustomTextInput
+            placeholder="Destino"
+            onChangeText={(text) => setValue("destination", text)}
+          />
+          <CustomTextInput
+            placeholder="Tempo"
+            onChangeText={(text) => setValue("time", text)}
+          />
+          <Button title="Simular" onPress={handleSubmit(onSubmit)}>
+            <ButtonText>Simular</ButtonText>
+          </Button>
         </>
       )}
-    </ScrollView>
+      <ResultText>Com FaleMais: {withPlan}</ResultText>
+      <ResultText>Sem FaleMais:{withinPlan}</ResultText>
+    </Container>
   );
 };
