@@ -38,7 +38,7 @@ class PlansController {
       });
 
       if (!plans) {
-        response.status(404).json({ error: 'Plans not found' });
+        return response.status(404).json({ error: 'Plans not found' });
       }
 
       return response.status(200).json(plans);
@@ -64,7 +64,7 @@ class PlansController {
       });
 
       if (planExists) {
-        return response.status(400).json({ error: 'Plan already exists.' });
+        return response.status(404).json({ error: 'Plan already exists.' });
       }
 
       const plan = await Plans.create({

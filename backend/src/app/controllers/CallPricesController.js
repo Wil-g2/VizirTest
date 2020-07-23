@@ -37,7 +37,7 @@ class CallPricesController {
       });
 
       if (!callPrices) {
-        response.status(404).json({ error: 'CallPrices not found' });
+        return response.status(404).json({ error: 'CallPrices not found' });
       }
 
       return response.status(200).json(callPrices);

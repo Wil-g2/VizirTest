@@ -22,7 +22,7 @@ class billController {
       });
 
       if (!callPrice) {
-        response.status(404).json({ error: 'Call Price not found' });
+        return response.status(404).json({ error: 'Call Price not found' });
       }
 
       const plans = await Plans.findOne({
@@ -32,7 +32,7 @@ class billController {
       });
 
       if (!plans) {
-        response.status(404).json({ error: 'Plan not found' });
+        return response.status(404).json({ error: 'Plan not found' });
       }
 
       let withPlan = 0;
