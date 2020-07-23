@@ -1,11 +1,8 @@
-require('dotenv').config({
-  path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env',
-});
+import './bootstrap';
 
 import express from 'express';
 import helmet from 'helmet';
 import cors from 'cors';
-import path from 'path';
 import routes from './routes';
 
 import './database';
